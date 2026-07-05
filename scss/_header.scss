@@ -1,0 +1,27 @@
+header{
+margin-bottom:30px;
+}
+
+.navbar-brand{
+font-size:24px;
+font-weight:bold;
+}
+
+.hero{
+background:url("../img/banner.jpg") center center/cover no-repeat;
+padding:120px 30px;
+text-align:center;
+color:white;
+border-radius:$radio;
+margin-top:25px;
+}
+
+.hero h1{
+font-size:48px;
+font-weight:bold;
+}
+
+.hero p{
+font-size:20px;
+margin:20px 0;
+}

@@ -1,0 +1,81 @@
+header {
+  margin-bottom: 30px;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.hero {
+  background: url("../img/banner.jpg") center center/cover no-repeat;
+  padding: 120px 30px;
+  text-align: center;
+  color: white;
+  border-radius: 10px;
+  margin-top: 25px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.hero p {
+  font-size: 20px;
+  margin: 20px 0;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.card img {
+  height: 260px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+footer {
+  background: #212529;
+  color: white;
+  text-align: center;
+  padding: 25px;
+  margin-top: 60px;
+}
+
+footer p {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 992px) {
+  .hero {
+    padding: 80px 20px;
+  }
+  .hero h1 {
+    font-size: 38px;
+  }
+}
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 15px;
+  }
+  .hero h1 {
+    font-size: 30px;
+  }
+  .hero p {
+    font-size: 18px;
+  }
+  footer {
+    font-size: 14px;
+  }
+}/*# sourceMappingURL=styles.css.map */
