@@ -50,118 +50,164 @@
     © 2026 UTP Books Marketplace
 </footer>
 
-<!-- JS PRODUCTOS -->
 <script src="js/app.js"></script>
 
 <script>
-    // 1. Obtener el ID de la URL (?id=X)
+    // Obtener el ID de la URL
     const params = new URLSearchParams(window.location.search);
     const id = parseInt(params.get("id"));
 
     const contenedor = document.getElementById("detalleProducto");
-    let producto = null; // Variable para almacenar el libro cuando lo encontremos
+    let producto = null;
 
-    // 2. Traer los datos frescos directamente de tu base de datos MySQL por PHP
-    fetch("php/productos.php")
+    // Obtener UN SOLO producto desde la base de datos- CONEXION 
+    fetch(`php/detalle.php?id=${id}`)
         .then(respuesta => {
             if (!respuesta.ok) {
                 throw new Error("Error al conectar con la base de datos");
             }
             return respuesta.json();
         })
-        .then(productos => {
-            // Buscamos el libro que coincida con el ID de la barra de direcciones
-            producto = productos.find(p => parseInt(p.id) === id);
+        .then(data => {
+
+            producto = data;
 
             if (producto) {
-                // Dibujamos tu mismo diseño Bootstrap original con los campos reales de MySQL (.imagen)
+
                 contenedor.innerHTML = `
                 <div class="row g-5">
-                    <!-- IMAGEN PEQUEÑA CUADRADA -->
+
                     <div class="col-md-6 d-flex justify-content-center">
-                        <div style="width: 500px; height: 500px;" class="shadow-sm rounded overflow-hidden">
-                            <img src="img/${producto.imagen}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://placehold.co'">
+                        <div style="width:500px; height:500px;" class="shadow-sm rounded overflow-hidden">
+                            <img src="img/${producto.imagen}" class="w-100 h-100 object-fit-cover"
+                                onerror="this.src='https://placehold.co/500x500'">
                         </div>
                     </div>
 
-                    <!-- INFO -->
                     <div class="col-md-6">
+
                         <h2 class="fw-bold">${producto.nombre}</h2>
-                        <p class="text-muted">Autor: <strong>${producto.autor}</strong></p>
-                        <p class="text-muted">Categoría: <strong>${producto.categoria}</strong></p>
-                        <h3 class="text-success fw-bold">S/ ${parseFloat(producto.precio).toFixed(2)}</h3>
-                        <p class="lead">${producto.descripcion}</p>
+
+                        <p class="text-muted">
+                            Autor:
+                            <strong>${producto.autor}</strong>
+                        </p>
+
+                        <p class="text-muted">
+                            Categoría:
+                            <strong>${producto.categoria}</strong>
+                        </p>
+
+                        <h3 class="text-success fw-bold">
+                            S/ ${parseFloat(producto.precio).toFixed(2)}
+                        </h3>
+
+                        <p class="lead">
+                            ${producto.descripcion}
+                        </p>
+
                         <hr>
+
                         <h5>Detalles del producto</h5>
+
                         <ul class="list-group list-group-flush mb-3">
-                            <li class="list-group-item">Tipo: Libro universitario</li>
-                            <li class="list-group-item">Estado: Disponible</li>
-                            <li class="list-group-item">Envío: Disponible en campus</li>
+                            <li class="list-group-item">
+                                Tipo: Libro universitario
+                            </li>
+
+                            <li class="list-group-item">
+                                Estado: Disponible
+                            </li>
+
+                            <li class="list-group-item">
+                                Envío: Disponible en campus
+                            </li>
                         </ul>
 
-                        <!-- BOTONES -->
                         <div class="d-grid gap-2">
+
                             <button class="btn btn-primary btn-lg" onclick="agregarAlCarrito()">
                                 Agregar al carrito
                             </button>
+
                             <button class="btn btn-success btn-lg" onclick="comprarAhora()">
                                 Comprar ahora
                             </button>
+
                         </div>
+
                     </div>
+
                 </div>
                 `;
+
             } else {
+
                 mostrarErrorNoEncontrado();
+
             }
+
         })
         .catch(error => {
-            console.error("Error al cargar la base de datos en detalle:", error);
+
+            console.error(error);
+
             mostrarErrorNoEncontrado();
+
         });
 
     function mostrarErrorNoEncontrado() {
+
         contenedor.innerHTML = `
             <div class="text-center py-5">
+
                 <h3>Producto no encontrado</h3>
+
                 <a href="productos.html" class="btn btn-primary mt-3">
                     Volver al catálogo
                 </a>
+
             </div>
         `;
+
     }
 
-    // =============================================
-    // CARRITO FUNCIONAL (Vinculado a tu clave de app.js)
-    // =============================================
     function agregarAlCarrito() {
+
         if (!producto) return;
 
-        // Usamos la misma estructura de almacenamiento local de app.js (utp_cart)
-        let carrito = JSON.parse(localStorage.getItem('utp_cart')) || [];
-        const idx = carrito.findIndex(x => parseInt(x.id) === parseInt(producto.id));
-        
+        let carrito = JSON.parse(localStorage.getItem("utp_cart")) || [];
+
+        const idx = carrito.findIndex(item => item.id == producto.id);
+
         if (idx >= 0) {
-            carrito[idx].qty += 1;
+
+            carrito[idx].qty++;
+
         } else {
-            carrito.push({ id: parseInt(producto.id), qty: 1 });
+
+            carrito.push({
+                id: producto.id,
+                qty: 1
+            });
+
         }
-        
-        localStorage.setItem('utp_cart', JSON.stringify(carrito));
-        alert("¡" + producto.nombre + " agregado al carrito con éxito!");
+
+        localStorage.setItem("utp_cart", JSON.stringify(carrito));
+
+        alert(producto.nombre + " agregado al carrito.");
+
     }
 
-    // =========================
-    // COMPRAR AHORA
-    // =========================
     function comprarAhora() {
-        alert("Compra realizada con éxito");
+
+        alert("Compra realizada con éxito.");
+
     }
 </script>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-</html>
 
+</html>
