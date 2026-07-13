@@ -37,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         WHERE id=?
     ");
 
+    // nombre(s), categoria(s), precio(d), autor(s), imagen(s), descripcion(s), id(i)
     $sql->bind_param(
         "ssdsssi",
         $nombre,
