@@ -27,7 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($password == $usuario["password"]) {
 
             $_SESSION["id"] = $usuario["id"];
+            $_SESSION["usuario_id"] = $usuario["id"];
             $_SESSION["nombre"] = $usuario["nombre"];
+            $_SESSION["usuario_nombre"] = $usuario["nombre"];
             $_SESSION["rol"] = $usuario["rol"];
 
             if ($usuario["rol"] == "admin") {
