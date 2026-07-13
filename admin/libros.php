@@ -84,7 +84,10 @@ $resultado = $conexion->query("SELECT * FROM libros");
                 <td>
                     <img
                         src="../img/<?= $libro["imagen"] ?>"
-                        width="70">
+                        width="70"
+                        style="height: 90px; object-fit: cover;"
+                        class="rounded shadow-sm"
+                        onerror="this.src='https://placehold.co'">
                 </td>
 
                 <td><?= $libro["nombre"] ?></td>

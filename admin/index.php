@@ -16,10 +16,8 @@ $totalVentas = $conexion->query("SELECT COUNT(*) AS total FROM ventas")
                         ->fetch_assoc()["total"];
 
 // Total de ingresos
-$ingresos = $conexion->query("SELECT SUM(total) AS total FROM ventas")
-                     ->fetch_assoc()["total"];
-
-$ingresos = $ingresos ? $ingresos : 0;
+$resultadoIngresos = $conexion->query("SELECT SUM(total) AS total FROM ventas")->fetch_assoc();
+$ingresos = isset($resultadoIngresos["total"]) && $resultadoIngresos["total"] ? $resultadoIngresos["total"] : 0;
 
 // Total de usuarios
 $totalUsuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")
