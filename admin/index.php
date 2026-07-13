@@ -81,7 +81,7 @@ $totalUsuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")
             <div class="card shadow border-0 text-center">
                 <div class="card-body">
                     <h5>📚 Libros</h5>
-                    <h2 id="totalLibros">0</h2>
+                    <h2><?= $totalLibros ?></h2>
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@ $totalUsuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")
             <div class="card shadow border-0 text-center">
                 <div class="card-body">
                     <h5>🛒 Ventas</h5>
-                    <h2 id="totalVentas">0</h2>
+                    <h2><?= $totalVentas ?></h2>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@ $totalUsuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")
             <div class="card shadow border-0 text-center">
                 <div class="card-body">
                     <h5>💰 Ingresos</h5>
-                    <h2 id="totalIngresos">S/ 0.00</h2>
+                    <h2>S/ <?= number_format($ingresos, 2) ?></h2>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@ $totalUsuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")
             <div class="card shadow border-0 text-center">
                 <div class="card-body">
                     <h5>👤 Usuarios</h5>
-                    <h2 id="totalUsuarios">0</h2>
+                    <h2><?= $totalUsuarios ?></h2>
                 </div>
             </div>
         </div>
