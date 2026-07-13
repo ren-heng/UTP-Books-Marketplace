@@ -5,7 +5,6 @@ ini_set('display_errors', 1);
 
 session_start();
 
-
 include "conexion.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -23,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $usuario = $resultado->fetch_assoc();
 
-        // Por ahora usamos contraseña en texto plano
+        // Verificar contraseña
         if ($password == $usuario["password"]) {
 
             $_SESSION["id"] = $usuario["id"];
@@ -32,9 +31,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["usuario_nombre"] = $usuario["nombre"];
             $_SESSION["rol"] = $usuario["rol"];
 
+            // Redireccionar según el rol
             if ($usuario["rol"] == "admin") {
 
                 header("Location: ../admin/index.php");
+
+            } elseif ($usuario["rol"] == "vendedor") {
+
+                header("Location: ../vendedor/dashboard.php");
 
             } else {
 
@@ -66,4 +70,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conexion->close();
+
 ?>
