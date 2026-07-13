@@ -6,6 +6,26 @@ if (!isset($_SESSION["rol"]) || $_SESSION["rol"] != "admin") {
     header("Location: ../login.html");
     exit();
 }
+    include "../php/conexion.php";
+// Total de libros
+$totalLibros = $conexion->query("SELECT COUNT(*) AS total FROM libros")
+                        ->fetch_assoc()["total"];
+
+// Total de ventas
+$totalVentas = $conexion->query("SELECT COUNT(*) AS total FROM ventas")
+                        ->fetch_assoc()["total"];
+
+// Total de ingresos
+$ingresos = $conexion->query("SELECT SUM(total) AS total FROM ventas")
+                     ->fetch_assoc()["total"];
+
+$ingresos = $ingresos ? $ingresos : 0;
+
+// Total de usuarios
+$totalUsuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")
+                          ->fetch_assoc()["total"];
+
+   
 ?>
 
 <!DOCTYPE html>
