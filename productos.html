@@ -48,8 +48,13 @@
                             <a class="nav-link" href="carrito.html">Carrito</a>
                         </li>
 
-                    </ul>
+                        <li class="nav-item" id="menuSesion"></li>
 
+                    </ul>
+                    <form class="d-flex ms-lg-3 mt-3 mt-lg-0">
+                        <input class="form-control me-2" type="search" placeholder="Buscar libro">
+                        <button class="btn btn-light">Buscar</button>
+                    </form>
                 </div>
 
             </div>
@@ -73,15 +78,12 @@
             <div class="row mt-4 mb-4">
 
                 <div class="col-md-6">
-
                     <input type="text" id="buscar" class="form-control" placeholder="Buscar libro...">
-
                 </div>
 
                 <div class="col-md-3">
-
                     <select id="categoria" class="form-select">
-                        <option value="">Todas las categorías</option>
+                        <option value="">Todas las categorías</option>  //no filtrar
                         <option value="Programación">Programación</option>
                         <option value="Física">Física</option>
                         <option value="Base de Datos">Base de Datos</option>
@@ -90,7 +92,6 @@
                         <option value="Redes">Redes</option>
                         <option value="Sistemas">Sistemas</option>
                     </select>
-
                 </div>
 
             </div>
@@ -99,8 +100,8 @@
 
         <section class="container mt-5 mb-5">
 
-            <div class="row g-4" id="listaProductos">
-
+            <div class="row g-4" id="listaProductos"> 
+                //inserta todas las tarjetas
             </div>
 
         </section>
@@ -122,26 +123,26 @@
     <script src="js/app.js"></script>
 
     <script>
-        const lista = document.getElementById("listaProductos");
-        const txtBuscar = document.getElementById("buscar");
-        const selectCategoria = document.getElementById("categoria");
+        const lista = document.getElementById("listaProductos"); //busca el div vacio
+        const txtBuscar = document.getElementById("buscar"); //guarda input
+        const selectCategoria = document.getElementById("categoria"); //guarda select
 
-        let todosLosLibros = []; // Guardará los libros originales de la BD
+        let todosLosLibros = []; //guardara los libros originales de la BD
 
-        // Datos de la base de datos MySQL por PHP
+        //datos de la base de datos MySQL por PHP
         fetch("php/productos.php")
             .then(respuesta => {
-                if (!respuesta.ok) {
+                if (!respuesta.ok) { //espera respuesta dek server
                     throw new Error("Error al conectar con la base de datos");
                 }
                 return respuesta.json();
             })
             .then(datos => {
-                // Guardar los libros en la ventana global para que el carrito y los detalles los encuentren
+                //guarda los libros en la ventana global para que el carrito y los detalles los encuentren
                 window.productos = datos;
-                todosLosLibros = datos; // Guardamos la copia para filtrar
+                todosLosLibros = datos; //guardar la copia para filtrar
 
-                // Pintamos los libros por primera vez
+                //pintar los libros por primera vez (FUNCION)
                 dibujarProductos(todosLosLibros);
             })
             .catch(error => {
@@ -153,9 +154,9 @@
                 `;
             });
 
-        // FUNCIÓN PARA DIBUJAR LAS TARJETAS (Es tu mismo código ordenado)
-        function dibujarProductos(librosAMostrar) {
-            lista.innerHTML = ""; // Limpiar la pantalla por si acaso
+        //FUNCIoN PARA DIBUJAR LAS TARJETAS
+        function dibujarProductos(librosAMostrar) {  //crea las tarjetas
+            lista.innerHTML = ""; //limpiar la pantalla por si acaso, para q no se repitna
 
             if (librosAMostrar.length === 0) {
                 lista.innerHTML = `
@@ -166,8 +167,9 @@
                 return;
             }
 
-            librosAMostrar.forEach(producto => {
-                lista.innerHTML += `
+            librosAMostrar.forEach(producto => { //recorre libros uno por uno
+                //va agregando tarjetas
+                lista.innerHTML += ` 
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm">
                         <img src="img/${producto.imagen}" 
@@ -194,27 +196,27 @@
             });
         }
 
-        // LÓGICA DE FILTRADO EN TIEMPO REAL
-        function filtrarCatalogo() {
-            const texto = txtBuscar.value.toLowerCase().trim();
+        //FILTRADO EN TIEMPO REAL
+        function filtrarCatalogo() { //hace las busquedas
+            const texto = txtBuscar.value.toLowerCase().trim(); //obtiene lo q escribe el usuario
             const catSeleccionada = selectCategoria.value;
 
-            const filtrados = todosLosLibros.filter(libro => {
+            const filtrados = todosLosLibros.filter(libro => {  //recorre todos los L y solo devuelbe los que cumplan la condicion
                 const coincideTexto = libro.nombre.toLowerCase().includes(texto) ||
                     libro.autor.toLowerCase().includes(texto);
 
-                const coincideCategoria = catSeleccionada === "" ||
+                const coincideCategoria = catSeleccionada === "" ||  //si no eligió categoria muestra todo, si sim muestra eso
                     libro.categoria === catSeleccionada;
 
                 return coincideTexto && coincideCategoria;
             });
 
-            dibujarProductos(filtrados);
+            dibujarProductos(filtrados); //despues de filtro vuelve a crear las tarjetas
         }
 
-        // Escuchamos cuando escribes o cambias la categoría
-        txtBuscar.addEventListener("input", filtrarCatalogo);
-        selectCategoria.addEventListener("change", filtrarCatalogo);
+        //escucha cuando se escribe o cambia la categoría
+        txtBuscar.addEventListener("input", filtrarCatalogo); //cuando se escribe ejecuta
+        selectCategoria.addEventListener("change", filtrarCatalogo); //al cambiar categoria tambien se ejecuta el filtro
     </script>
 
 

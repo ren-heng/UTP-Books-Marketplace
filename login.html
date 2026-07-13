@@ -72,5 +72,46 @@
 
 </div>
 
+    <script>
+        document.getElementById("formLogin").addEventListener("submit", function(e) {
+            e.preventDefault(); // Evitamos que la página se recargue
+
+            const datosFormulario = new FormData(this);
+
+            // Enviamos los datos de forma silenciosa al php de Jimena
+            fetch("php/login.php", {
+                method: "POST",
+                body: datosFormulario
+            })
+            .then(respuesta => {
+
+                if (respuesta.redirected) {
+                    // Si el servidor nos redirige al panel admin o index, se guardan los datos simulados
+                    const correo = document.getElementsByName("correo")[0].value;
+                    if(correo.includes("admin")) {
+                        localStorage.setItem("usuario_nombre", "Administrador");
+                        localStorage.setItem("usuario_rol", "admin");
+                    } else {
+                        localStorage.setItem("usuario_nombre", "Juan Perez");
+                        localStorage.setItem("usuario_rol", "cliente");
+                    }
+                    window.location.href = respuesta.url;
+                } else {
+                    return respuesta.text();
+                }
+            })
+            .then(texto => {
+                if (texto) {
+                    // Si el PHP devolvió un código script con alerta, lo inyectamos para que se ejecute
+                    const scriptEl = document.createElement("div");
+                    scriptEl.innerHTML = texto;
+                    document.body.appendChild(scriptEl);
+                }
+            })
+            .catch(error => console.error("Error en el login:", error));
+        });
+    </script>
+
+
 </body>
 </html>

@@ -104,3 +104,66 @@ function showCartFeedback(btn) {
     btn.style.background = '';
   }, 1500);
 }
+
+
+// =================================================================
+// CONTROL DINÁMICO DE INICIO DE SESIÓN
+// =================================================================
+
+// Escucha cuando la página termina de cargar por completo en el navegador
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Busca el espacio vacío que dejamos en el menú HTML con el ID "menuSesion"
+  const menuSesion = document.getElementById("menuSesion");
+  if (!menuSesion) return; // Si la página no tiene este menú, detiene la función
+
+  // Lee los datos guardados en la memoria del navegador para saber quién se conectó
+  const nombre = localStorage.getItem("usuario_nombre");
+  const rol = localStorage.getItem("usuario_rol");
+
+  // EVALUACIÓN: ¿Existe un usuario con sesión iniciada?
+  if (nombre) {
+        // SI HAY SESIÓN INICIADA
+        if (rol === "admin") {
+            menuSesion.innerHTML = `
+                <div class="d-flex align-items-center h-100 gap-2 ms-lg-3">
+                    <a class="nav-link text-warning fw-bold p-0" href="admin/index.php">Panel Admin</a>
+                    <a class="nav-link text-danger fw-bold p-0" href="#" onclick="cerrarSesionLocal(event)">Salir</a>
+                </div>
+            `;
+        } 
+        else {
+            menuSesion.innerHTML = `
+                <div class="d-flex align-items-center h-100 text-white-50 ms-lg-3" style="font-size: 0.95rem;">
+                    Hola, ${nombre} | <a href="#" class="text-danger text-decoration-none ms-1" onclick="cerrarSesionLocal(event)">Salir</a>
+                </div>
+            `;
+        }
+        
+    } else {
+        // SI NO HAY NADIE CONECTADO: Botón con efecto hover dinámico al pasar el cursor
+        menuSesion.innerHTML = `
+            <div class="d-flex align-items-center h-100 ms-lg-3 my-2 my-lg-0">
+                <a class="btn fw-bold px-3 btn-sm" href="login.html" 
+                   id="btnIniciarSesionNav"
+                   style="background-color: #1a252f; color: #ffffff; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); font-size: 0.9rem; white-space: nowrap; transition: all 0.2s ease-in-out;"
+                   onmouseover="this.style.backgroundColor='#2c3e50'; this.style.borderColor='#ffffff';"
+                   onmouseout="this.style.backgroundColor='#1a252f'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                    Iniciar Sesión
+                </a>
+            </div>
+        `;
+    }
+});
+
+// Función encargada de borrar los datos de la cuenta cuando se presiona "Salir"
+function cerrarSesionLocal(e) {
+  e.preventDefault(); // Detiene el comportamiento por defecto del enlace
+
+  // Borra las credenciales guardadas en la memoria del navegador (localStorage)
+  localStorage.removeItem("usuario_nombre");
+  localStorage.removeItem("usuario_rol");
+
+  // Redirige al archivo PHP que limpia la memoria de sesiones en el servidor XAMPP
+  window.location.href = "php/logout.php";
+}
