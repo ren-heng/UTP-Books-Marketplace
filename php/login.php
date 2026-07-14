@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $usuario = $resultado->fetch_assoc();
 
-        // Verificar contraseña
+                // Verificar contraseña
         if ($password == $usuario["password"]) {
 
             $_SESSION["id"] = $usuario["id"];
@@ -30,6 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["nombre"] = $usuario["nombre"];
             $_SESSION["usuario_nombre"] = $usuario["nombre"];
             $_SESSION["rol"] = $usuario["rol"];
+
+            // ── PEGA ESTA LÍNEA AQUÍ (Guarda el nombre real en la memoria de la página) ──
+            echo "<script>
+                    localStorage.setItem('usuario_nombre', '" . $usuario["nombre"] . "');
+                    localStorage.setItem('usuario_rol', '" . $usuario["rol"] . "');
+                  </script>";
 
             // Redireccionar según el rol
             if ($usuario["rol"] == "admin") {

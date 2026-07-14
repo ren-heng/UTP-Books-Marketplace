@@ -11,69 +11,110 @@
 
 <body class="bg-light">
 
-<div class="container">
+    <div class="container">
 
-    <div class="row justify-content-center mt-5">
+        <div class="row justify-content-center mt-5">
 
-        <div class="col-md-5">
+            <div class="col-md-5" id="vistaLogin">
 
-            <div class="card shadow">
+                <div class="card shadow">
 
-                <div class="card-header bg-primary text-white text-center">
+                    <div class="card-header bg-primary text-white text-center">
 
-                    <h3>UTP Books Marketplace</h3>
+                        <h3>UTP Books Marketplace</h3>
 
-                </div>
+                    </div>
 
-                <div class="card-body">
+                    <div class="card-body">
 
-                    <form action="php/login.php" method="POST">
+                        <form id="formLogin" action="php/login.php" method="POST">
 
-                        <div class="mb-3">
+                            <div class="mb-3">
 
-                            <label>Correo</label>
+                                <label>Correo</label>
 
-                            <input
-                                type="email"
-                                name="correo"
-                                class="form-control"
-                                required>
+                                <input type="email" name="correo" class="form-control" required>
 
-                        </div>
+                            </div>
 
-                        <div class="mb-3">
+                            <div class="mb-3">
 
-                            <label>Contraseña</label>
+                                <label>Contraseña</label>
 
-                            <input
-                                type="password"
-                                name="password"
-                                class="form-control"
-                                required>
+                                <input type="password" name="password" class="form-control" required>
 
-                        </div>
+                            </div>
 
-                        <button
-                            class="btn btn-primary w-100">
+                            <button class="btn btn-primary w-100">
 
-                            Ingresar
+                                Ingresar
 
-                        </button>
+                            </button>
 
-                    </form>
+                            <div class="text-center mt-3">
+                                <a href="#" class="text-decoration-none" onclick="mostrarRegistro(event)">¿No tienes
+                                    cuenta? Regístrate aquí</a>
+                            </div>
+
+                        </form>
+
+                    </div>
 
                 </div>
 
             </div>
 
+<!-- TARJETA DE REGISTRO (Oculta por defecto) -->
+                <div class="col-md-5 d-none" id="vistaRegistro">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white text-center">
+                            <h3>Crear Cuenta Nueva</h3>
+                        </div>
+                        <div class="card-body">
+                            <form action="php/registro.php" method="POST">
+                                <div class="mb-3">
+                                    <label>Nombre Completo</label>
+                                    <input type="text" name="nombre" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Correo</label>
+                                    <input type="email" name="correo" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Contraseña</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+                                <button class="btn btn-success w-100 mb-3">Registrarme</button>
+                                <div class="text-center">
+                                    <a href="#" class="text-decoration-none text-success"
+                                        onclick="mostrarLogin(event)">¿Ya tienes cuenta? Inicia sesión</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
         </div>
 
     </div>
 
-</div>
-
     <script>
-        document.getElementById("formLogin").addEventListener("submit", function(e) {
+
+        function mostrarRegistro(e) {
+            e.preventDefault();
+            document.getElementById("vistaLogin").classList.add("d-none");
+            document.getElementById("vistaRegistro").classList.remove("d-none");
+        }
+
+        function mostrarLogin(e) {
+            e.preventDefault();
+            document.getElementById("vistaRegistro").classList.add("d-none");
+            document.getElementById("vistaLogin").classList.remove("d-none");
+        }
+
+
+
+        document.getElementById("formLogin").addEventListener("submit", function (e) {
             e.preventDefault(); // Evitamos que la página se recargue
 
             const datosFormulario = new FormData(this);
@@ -83,35 +124,48 @@
                 method: "POST",
                 body: datosFormulario
             })
-            .then(respuesta => {
+                .then(respuesta => {
 
-                if (respuesta.redirected) {
-                    // Si el servidor nos redirige al panel admin o index, se guardan los datos simulados
-                    const correo = document.getElementsByName("correo")[0].value;
-                    if(correo.includes("admin")) {
+                    if (respuesta.redirected) {
+                    // 1. Capturamos el correo real que el usuario escribió en la pantalla
+                    const correoInput = document.querySelector('input[name="correo"]').value;
+                    
+                    if (correoInput.includes("admin")) {
                         localStorage.setItem("usuario_nombre", "Administrador");
                         localStorage.setItem("usuario_rol", "admin");
+                    } else if (correoInput.includes("vendedor")) {
+                        localStorage.setItem("usuario_nombre", "Vendedor UTP");
+                        localStorage.setItem("usuario_rol", "vendedor");
                     } else {
-                        localStorage.setItem("usuario_nombre", "Juan Perez");
+                        // 2. MAGIA DINÁMICA: Tomamos la parte antes del @ (ejm: lucia.perez)
+                        let nombreExtraido = correoInput.split('@')[0];
+                        
+                        // Reemplazamos puntos o guiones por espacios para que se vea limpio
+                        nombreExtraido = nombreExtraido.replace(/[^a-zA-Z]/g, ' '); 
+                        
+                        // Ponemos la primera letra en Mayúscula automáticamente
+                        const nombreFinal = nombreExtraido.charAt(0).toUpperCase() + nombreExtraido.slice(1);
+                        
+                        // Guardamos el nombre real extraído en el navegador
+                        localStorage.setItem("usuario_nombre", nombreFinal);
                         localStorage.setItem("usuario_rol", "cliente");
                     }
                     window.location.href = respuesta.url;
-                } else {
-                    return respuesta.text();
                 }
-            })
-            .then(texto => {
-                if (texto) {
-                    // Si el PHP devolvió un código script con alerta, lo inyectamos para que se ejecute
-                    const scriptEl = document.createElement("div");
-                    scriptEl.innerHTML = texto;
-                    document.body.appendChild(scriptEl);
-                }
-            })
-            .catch(error => console.error("Error en el login:", error));
+                })
+                .then(texto => {
+                    if (texto) {
+                        // Si el PHP devolvió un código script con alerta, lo inyectamos para que se ejecute
+                        const scriptEl = document.createElement("div");
+                        scriptEl.innerHTML = texto;
+                        document.body.appendChild(scriptEl);
+                    }
+                })
+                .catch(error => console.error("Error en el login:", error));
         });
     </script>
 
 
 </body>
+
 </html>

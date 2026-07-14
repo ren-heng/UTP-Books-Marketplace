@@ -132,13 +132,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
         } 
+                // SI EL USUARIO ES UN CLIENTE REGISTRADO (Como Lucía)
         else {
             menuSesion.innerHTML = `
-                <div class="d-flex align-items-center h-100 text-white-50 ms-lg-3" style="font-size: 0.95rem;">
-                    Hola, ${nombre} | <a href="#" class="text-danger text-decoration-none ms-1" onclick="cerrarSesionLocal(event)">Salir</a>
+                <div class="d-flex align-items-center h-100 ms-lg-3 my-2 my-lg-0 gap-3">
+                    <span class="text-white fw-medium d-flex align-items-center gap-1" style="font-size: 0.95rem;">
+                        <svg xmlns="http://w3.org" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                        </svg>
+                        Hola, <strong class="text-warning">${nombre}</strong>
+                    </span>
+                    <a class="btn fw-bold px-3 btn-sm" href="#" onclick="cerrarSesionLocal(event)" 
+                       style="background-color: #ffffff; color: #1a252f; border-radius: 50px; font-size: 0.85rem; border: 1px solid transparent; transition: all 0.2s ease-in-out;"
+                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.85)';"
+                       onmouseout="this.style.backgroundColor='#ffffff';">
+                        Salir
+                    </a>
                 </div>
             `;
         }
+
         
     } else {
         // SI NO HAY NADIE CONECTADO: Botón con efecto hover dinámico al pasar el cursor
